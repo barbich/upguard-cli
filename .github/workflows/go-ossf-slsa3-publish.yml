@@ -73,12 +73,11 @@ jobs:
         with:
           merge-multiple: true
           path: binary
+          run-id: 9031136706
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Rename artifacts
         run: |
-          mkdir -p binary
           cd binary
-          wget https://github.com/barbich/upguard-cli/actions/runs/9031136706/artifacts/1490860691
-          wget https://github.com/barbich/upguard-cli/actions/runs/9031136706/artifacts/1490861507
           ls
           for filename in binary-*
           do

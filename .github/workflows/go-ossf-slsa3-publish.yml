@@ -73,6 +73,7 @@ jobs:
         with:
           merge-multiple: true
           path: binary
+          repository: barbich/upguard-cli
           run-id: 9031136706
       - name: Rename artifacts
         run: |

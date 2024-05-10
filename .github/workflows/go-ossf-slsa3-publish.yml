@@ -56,7 +56,8 @@ jobs:
 #          - amd64
 #          - arm64
     needs: args
-    uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v2.0.0
+#    uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v2.0.0
+    uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@main
     with:
       go-version-file: go.mod
       upload-assets: false

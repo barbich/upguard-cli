@@ -88,7 +88,7 @@ jobs:
           files: |
             binary/${{needs.args.outputs.binname}}-*
   upload-assets:
-#    needs: build
+    needs: build
     permissions:
       contents: write # Needed to write artifacts to a release.
     runs-on: ubuntu-latest

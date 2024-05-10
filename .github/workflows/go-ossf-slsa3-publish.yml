@@ -90,7 +90,7 @@ jobs:
           files: |
             binary/$BINNAME-*
   upload-assets:
-    needs: build
+#    needs: build
     permissions:
       contents: write # Needed to write artifacts to a release.
     runs-on: ubuntu-latest

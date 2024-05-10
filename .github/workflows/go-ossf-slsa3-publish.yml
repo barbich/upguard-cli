@@ -59,7 +59,7 @@ jobs:
     uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v2.0.0
     with:
       go-version: 1.22.1
-      evaluated-envs: "COMMIT_DATE:${{needs.args.outputs.commit-date}}, COMMIT:${{needs.args.outputs.commit}}, VERSION:${{needs.args.outputs.version}}, TREE_STATE:${{needs.args.outputs.tree-state}}"
+      evaluated-envs: "COMMIT_DATE:${{needs.args.outputs.commit-date}}, COMMIT:${{needs.args.outputs.commit}}, VERSION:${{needs.args.outputs.version}}, TREE_STATE:${{needs.args.outputs.tree-state}}, BINNAME:${{needs.args.outputs.binname}}"
   upload-assets-wd:
     needs: build
     permissions:
@@ -78,7 +78,7 @@ jobs:
           cd binary
           for filename in binary-*
           do
-            mv $filename upguard-cli${filename/binary/}
+            mv $filename $BINNAME${filename/binary/}
           done
       - name: Upload draft release
         uses: softprops/action-gh-release@v2
@@ -86,7 +86,7 @@ jobs:
           tag_name: manual
           draft: true
           files: |
-            binary/upguard-cli-*
+            binary/$BINNAME-*
   upload-assets:
     needs: build
     permissions:
@@ -105,11 +105,11 @@ jobs:
           cd binary
           for filename in binary-*
           do
-            mv $filename upguard-cli${filename/binary/}
+            mv $filename $BINNAME${filename/binary/}
           done
       - name: Upload release
         uses: softprops/action-gh-release@v2
         with:
           draft: true
           files: |
-            binary/upguard-cli-*
+            binary/$BINNAME-*

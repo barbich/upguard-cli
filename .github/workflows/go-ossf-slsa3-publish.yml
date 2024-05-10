@@ -41,11 +41,11 @@ jobs:
           echo "version=$(git describe --tags --always --dirty | cut -c2-)" >> "$GITHUB_OUTPUT"
           echo "tree-state=$(if git diff --quiet; then echo "clean"; else echo "dirty"; fi)" >> "$GITHUB_OUTPUT"
           echo "binname=$(go list -f '{{.Target}}' | xargs basename)" >> "$GITHUB_OUTPUT"
-##  build:
-##    permissions:
-##      id-token: write # To sign.
-##      contents: write # To upload release assets.
-##      actions: read   # To read workflow path.
+  build:
+    permissions:
+      id-token: write # To sign.
+      contents: write # To upload release assets.
+      actions: read   # To read workflow path.
 #    strategy:
 #      matrix:
 #        os:
@@ -55,14 +55,13 @@ jobs:
 #          - windows
 #          - amd64
 #          - arm64
-##    needs: args
-##    uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v2.0.0
-##    with:
-##      go-version: 1.22.1
-##      evaluated-envs: "COMMIT_DATE:${{needs.args.outputs.commit-date}}, COMMIT:${{needs.args.outputs.commit}}, VERSION:${{needs.args.outputs.version}}, TREE_STATE:${{needs.args.outputs.tree-state}}, BINNAME:${{needs.args.outputs.binname}}"
-  upload-assets-wd:
-##    needs: build
     needs: args
+    uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v2.0.0
+    with:
+      go-version: 1.22.1
+      evaluated-envs: "COMMIT_DATE:${{needs.args.outputs.commit-date}}, COMMIT:${{needs.args.outputs.commit}}, VERSION:${{needs.args.outputs.version}}, TREE_STATE:${{needs.args.outputs.tree-state}}"
+  upload-assets-wd:
+    needs: build
     permissions:
       contents: write # Needed to write artifacts to a release.
     runs-on: ubuntu-latest
@@ -74,12 +73,9 @@ jobs:
         with:
           merge-multiple: true
           path: binary
-          run-id: 9031136706
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Rename artifacts
         run: |
           cd binary
-          ls
           for filename in binary-*
           do
             mv $filename ${{needs.args.outputs.binname}}${filename/binary/}
@@ -109,11 +105,11 @@ jobs:
           cd binary
           for filename in binary-*
           do
-            mv $filename $BINNAME${filename/binary/}
+            mv $filename ${{needs.args.outputs.binname}}${filename/binary/}
           done
       - name: Upload release
         uses: softprops/action-gh-release@v2
         with:
           draft: true
           files: |
-            binary/$BINNAME-*
+            binary/${{needs.args.outputs.binname}}-*

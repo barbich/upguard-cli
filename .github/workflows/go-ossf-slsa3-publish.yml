@@ -62,6 +62,7 @@ jobs:
 ##      evaluated-envs: "COMMIT_DATE:${{needs.args.outputs.commit-date}}, COMMIT:${{needs.args.outputs.commit}}, VERSION:${{needs.args.outputs.version}}, TREE_STATE:${{needs.args.outputs.tree-state}}, BINNAME:${{needs.args.outputs.binname}}"
   upload-assets-wd:
 ##    needs: build
+    needs: args
     permissions:
       contents: write # Needed to write artifacts to a release.
     runs-on: ubuntu-latest
@@ -81,7 +82,7 @@ jobs:
           ls
           for filename in binary-*
           do
-            mv $filename "$BINNAME"${filename/binary/}
+            mv $filename ${{needs.args.outputs.binname}}${filename/binary/}
           done
       - name: Upload draft release
         uses: softprops/action-gh-release@v2
@@ -89,7 +90,7 @@ jobs:
           tag_name: manual
           draft: true
           files: |
-            binary/$BINNAME-*
+            binary/${{needs.args.outputs.binname}}-*
   upload-assets:
 #    needs: build
     permissions:

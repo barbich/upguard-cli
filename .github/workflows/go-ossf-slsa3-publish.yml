@@ -52,7 +52,7 @@ jobs:
       go-version-file: go.mod
       upload-assets: false
       evaluated-envs: "COMMIT_DATE:${{needs.args.outputs.commit-date}}, COMMIT:${{needs.args.outputs.commit}}, VERSION:${{needs.args.outputs.version}}, TREE_STATE:${{needs.args.outputs.tree-state}}"
-  upload-assets-wd:
+  upload-assets:
     needs: [args, build]
     permissions:
       contents: write # Needed to write artifacts to a release.
